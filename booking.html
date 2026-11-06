@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Seats | Nordheim Concert Hall</title>
+  <meta name="description" content="Reserve seats for a concert at the Nordheim Concert Hall.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="logo">Nordheim</a>
+    <nav class="nav" id="nav">
+      <a href="concerts.html">Concerts</a>
+      <a href="booking.html" aria-current="page">Book Seats</a>
+      <a href="library.html">Library</a>
+      <a href="restaurant.html">Restaurant</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+  </header>
+
+  <main>
+
+    <section class="page-hero">
+      <a href="concerts.html" class="back">&larr; Back to concerts</a>
+      <p class="eyebrow">Concert Hall</p>
+      <h1 id="bkHeading">Reserve Your Seats</h1>
+      <p class="lead">Pick a show, choose up to 6 seats and confirm. Grey seats are already booked.</p>
+    </section>
+
+    <section class="section">
+      <div class="booking">
+        <div class="panel booking-form">
+          <label for="bkConcert">Concert</label>
+          <select id="bkConcert"></select>
+
+          <label for="bkName">Your name</label>
+          <input id="bkName" type="text" maxlength="40" autocomplete="name">
+
+          <label for="bkUser">Roblox username</label>
+          <input id="bkUser" type="text" maxlength="20" autocomplete="username">
+
+          <p class="selected-line">Selected seats: <strong id="bkSelected">none</strong></p>
+          <button class="btn btn-primary" id="bkConfirm" type="button">Confirm booking</button>
+          <p class="note" id="bkStatus" role="status"></p>
+        </div>
+
+        <div class="panel seat-map">
+          <div id="seatGrid"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Nordheim Concert Hall. A Roblox experience.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="bookings.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Library | Nordheim Concert Hall</title>
+  <meta name="description" content="The library at the Nordheim Concert Hall.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="logo">Nordheim</a>
+    <nav class="nav" id="nav">
+      <a href="concerts.html">Concerts</a>
+      <a href="library.html" aria-current="page">Library</a>
+      <a href="restaurant.html">Restaurant</a>
+      <a href="index.html#visit">Visit</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+  </header>
+
+  <main>
+
+    <section class="page-hero">
+      <a href="index.html" class="back">&larr; Back to Nordheim</a>
+      <p class="eyebrow">Reading Room</p>
+      <h1>The Library</h1>
+      <p class="lead">A calm reading room with books on music, history and the north.</p>
+    </section>
+
+    <section class="section">
+      <div class="split">
+        <ul class="feature-list">
+          <li><strong>Reading room</strong> Open daily, with soft lighting and window seats.</li>
+          <li><strong>Quiet hours</strong> Silent reading from 9:00 to 12:00 every morning.</li>
+        </ul>
+        <div class="panel">
+          <h3>Featured books</h3>
+          <ul class="book-list" id="bookList"></ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Nordheim Concert Hall. A Roblox experience.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
