@@ -10,13 +10,18 @@
 <body>
 
   <header class="site-header">
-    <a href="index.html" class="logo">Nordheim</a>
+    <a href="index.html" class="logo">Norheim</a>
     <nav class="nav" id="nav">
       <a href="concerts.html">Concerts</a>
       <a href="library.html">Library</a>
       <a href="restaurant.html">Restaurant</a>
       <a href="#visit">Visit</a>
     </nav>
+    <div class="player-badge" id="playerBadge" hidden>
+      <img id="playerPhoto" alt="Your Roblox profile picture" width="36" height="36">
+      <span id="playerName"></span>
+    </div>
+    <a id="headerLogin" class="header-login" href="https://robloxlogin-5diz2ls3iq-ew.a.run.app">Log in with Roblox</a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
   </header>
 
@@ -82,5 +87,6 @@
   </footer>
 
   <script src="script.js"></script>
+  <script src="login-badge.js"></script>
 </body>
 </html>
