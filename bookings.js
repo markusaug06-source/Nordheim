@@ -55,6 +55,9 @@ const els = {
 let backend = null;      // Firestore helpers when configured
 let booked = {};         // concertId -> Set of taken seat ids
 let selected = new Set();
+let lastBookingTotal = null; // how many seats this player has for this show, after booking
+const BOOK_SEATS_URL = "https://europe-west1-nordheim-e6333.cloudfunctions.net/bookSeats";
+const MAX_TICKETS_PER_SHOW = 6;
 
 async function init() {
   bookableConcerts.forEach((c) => {
@@ -173,7 +176,14 @@ function updateLoginState() {
   } else {
     els.name.readOnly = false;
     els.user.readOnly = false;
+    setStatus("Log in with Roblox to choose your seats.");
   }
+
+  render(); // refresh the seat map so seats unlock or lock
+}
+
+function isLoggedIn() {
+  return !!(backend && backend.auth && backend.auth.currentUser);
 }
 
 function loadDemo() {
@@ -194,22 +204,19 @@ function readDemo() {
 
 async function saveBooking(concertId, seats, name, username) {
   if (backend) {
-    const { db, doc, runTransaction, serverTimestamp } = backend;
-    await runTransaction(db, async (tx) => {
-      const refs = seats.map((seat) => doc(db, "bookings", `${concertId}__${seat}`));
-      const snaps = await Promise.all(refs.map((r) => tx.get(r)));
-      if (snaps.some((s) => s.exists())) throw new Error("SEAT_TAKEN");
-      refs.forEach((r, i) => {
-        tx.set(r, {
-          concertId,
-          uid: backend.auth.currentUser.uid,
-          seat: seats[i],
-          name,
-          username,
-          createdAt: serverTimestamp()
-        });
-      });
+    // The server checks the 6-seat limit and saves the bookings
+    const idToken = await backend.auth.currentUser.getIdToken();
+    const response = await fetch(BOOK_SEATS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
+      body: JSON.stringify({ concertId, seats })
     });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const err = new Error(data.error || "SERVER");
+      throw err;
+    }
+    lastBookingTotal = data.total;
     return;
   }
 
@@ -346,6 +353,7 @@ function render() {
       const classes = ["seat"];
       if (isTaken) classes.push("booked");
       if (isSelected) classes.push("selected");
+      if (!isTaken && !isLoggedIn()) classes.push("locked");
 
       const circle = svgEl("circle", {
         class: classes.join(" "),
@@ -357,7 +365,7 @@ function render() {
       title.textContent = isTaken ? `Seat ${seat.id} (booked)` : `Seat ${seat.id}`;
       circle.appendChild(title);
 
-      if (!isTaken) {
+      if (!isTaken && isLoggedIn()) {
         circle.addEventListener("click", () => toggleSeat(seat.id));
       }
       svg.appendChild(circle);
@@ -414,10 +422,17 @@ async function confirmBooking() {
     els.name.value = "";
     els.user.value = "";
     render();
-    setStatus(`Booked seats ${seats.join(", ")} for ${concert ? concert.title : "your show"}. See you there!`);
+    const totalText = lastBookingTotal !== null
+      ? ` You now have ${lastBookingTotal} of ${MAX_TICKETS_PER_SHOW} seats for this show.`
+      : "";
+    setStatus(`Booked seats ${seats.join(", ")} for ${concert ? concert.title : "your show"}. See you there!${totalText}`);
   } catch (err) {
-    if (err.message === "SEAT_TAKEN") {
+    if (err.message === "TAKEN" || err.message === "SEAT_TAKEN") {
       setStatus("Sorry, one of those seats was just taken. Please choose again.", true);
+    } else if (err.message === "LIMIT") {
+      setStatus(`You can book at most ${MAX_TICKETS_PER_SHOW} seats for each show, and you have reached that limit.`, true);
+    } else if (err.message === "NOT_LOGGED_IN") {
+      setStatus("Please log in with Roblox first.", true);
     } else {
       console.error(err);
       setStatus("Something went wrong. Please try again.", true);
