@@ -316,6 +316,16 @@ h3 { font-size: 1.1rem; margin: 0 0 12px; color: var(--accent); font-weight: 600
 }
 .header-login:hover { background: var(--accent); color: var(--bg); }
 
+/* Center the menu links in the header on wider screens */
+@media (min-width: 761px) {
+  .site-header .nav {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
 /* Seat booking */
 .booking {
   display: grid;
