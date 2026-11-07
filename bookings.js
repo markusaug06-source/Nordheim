@@ -17,8 +17,8 @@ const DEMO_KEY = "nordheim-bookings";
 
 // ----- Hall layout -----
 // Floor rows, closest to the stage first. Seat counts per row.
-const FLOOR_ROWS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"];
-const FLOOR_SEATS = { A: 33, B: 35, C: 37, D: 37, E: 37, F: 37, G: 37, H: 37, I: 26, J: 37, K: 37, L: 37, M: 37, N: 37, O: 37, P: 37 };
+const FLOOR_ROWS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"];
+const FLOOR_SEATS = { A: 33, B: 35, C: 37, D: 37, E: 37, F: 37, G: 37, H: 37, I: 26, J: 37, K: 37, L: 37, M: 37, N: 37 };
 // Rows split by an aisle: number of seats on the left block (the rest go on the right).
 const FLOOR_AISLE_SPLIT = { I: 13 };
 // Split rows line up with the 37-seat rows: their outer seats match the wider rows' ends.
