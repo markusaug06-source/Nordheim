@@ -278,6 +278,7 @@ h3 { font-size: 1.1rem; margin: 0 0 12px; color: var(--accent); font-weight: 600
 .seat-svg .seat:hover { fill: var(--accent); }
 .seat-svg .seat.selected { fill: var(--accent-strong); }
 .seat-svg .seat.booked { fill: #3a3f4a; cursor: not-allowed; }
+.seat-svg .seat.locked { cursor: not-allowed; opacity: 0.5; }
 
 [hidden] { display: none !important; }
 
@@ -301,6 +302,19 @@ h3 { font-size: 1.1rem; margin: 0 0 12px; color: var(--accent); font-weight: 600
 @media (max-width: 760px) {
   .player-badge span { display: none; }
 }
+
+.header-login {
+  margin-left: auto;
+  margin-right: 12px;
+  padding: 8px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.header-login:hover { background: var(--accent); color: var(--bg); }
 
 /* Seat booking */
 .booking {
