@@ -35,7 +35,7 @@ const SEAT_RADIUS = 7;
 const FLOOR_RADIUS = 900;      // bigger = flatter, gentler curves
 const BALCONY_RADIUS = 800;
 const FLOOR_FIRST_ROW_Y = 130; // height of the first floor row (row A), just below the stage
-const BALCONY_CENTER_Y = -200;
+const BALCONY_CENTER_Y = -300;
 const STAGE = { x: -260, y: 40, width: 520, height: 60 };
 
 const SVG_NS = "http://www.w3.org/2000/svg";
