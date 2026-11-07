@@ -80,6 +80,7 @@ async function init() {
     try {
       await connectFirebase();
       setStatus("");
+      await handleRobloxReturn();
     } catch (err) {
       console.error(err);
       setStatus("Could not connect to the booking database. Showing demo mode.", true);
@@ -100,7 +101,10 @@ async function connectFirebase() {
   const fsMod = await import(`${base}/firebase-firestore.js`);
   const app = appMod.initializeApp(FIREBASE_CONFIG);
   const db = fsMod.getFirestore(app);
-  backend = { db, ...fsMod };
+  const authMod = await import(`${base}/firebase-auth.js`);
+  const auth = authMod.getAuth(app);
+  backend = { db, auth, authMod, ...fsMod };
+  authMod.onAuthStateChanged(auth, () => updateLoginState());
 
   // Live updates: when someone books, everyone's seat map refreshes.
   fsMod.onSnapshot(fsMod.collection(db, "bookings"), (snap) => {
@@ -115,6 +119,61 @@ async function connectFirebase() {
     console.error(err);
     setStatus("Lost connection to the booking database. Please refresh the page.", true);
   });
+}
+
+// After Roblox login, the server sends the visitor back here with a sign-in token after '#'.
+async function handleRobloxReturn() {
+  if (!backend) return;
+  const params = new URLSearchParams(location.hash.slice(1));
+  const token = params.get("token");
+  const robloxName = params.get("name");
+  const robloxPicture = params.get("picture");
+  if (!token) return;
+
+  // Remove the token from the address bar straight away
+  history.replaceState(null, "", location.pathname + location.search);
+
+  try {
+    const cred = await backend.authMod.signInWithCustomToken(backend.auth, token);
+    if (robloxName) {
+      await backend.authMod.updateProfile(cred.user, {
+        displayName: robloxName,
+        photoURL: robloxPicture || null
+      });
+    }
+    updateLoginState();
+    setStatus(`Logged in as ${robloxName || "player"}. Choose your seats below.`);
+  } catch (err) {
+    console.error(err);
+    setStatus("Roblox login expired. Please log in again.", true);
+  }
+}
+
+// Show the logged-in player's name, or the login button if nobody is logged in
+function updateLoginState() {
+  const user = backend && backend.auth ? backend.auth.currentUser : null;
+  const loginBtn = $("robloxLoginBtn");
+  if (loginBtn) loginBtn.hidden = !!user;
+
+  // Player badge in the top-right corner
+  const badge = $("playerBadge");
+  if (badge) {
+    badge.hidden = !user;
+    if (user) {
+      $("playerPhoto").src = user.photoURL || "";
+      $("playerName").textContent = user.displayName || "";
+    }
+  }
+
+  if (user) {
+    els.name.value = user.displayName || "";
+    els.user.value = user.displayName || "";
+    els.name.readOnly = true;
+    els.user.readOnly = true;
+  } else {
+    els.name.readOnly = false;
+    els.user.readOnly = false;
+  }
 }
 
 function loadDemo() {
@@ -143,6 +202,7 @@ async function saveBooking(concertId, seats, name, username) {
       refs.forEach((r, i) => {
         tx.set(r, {
           concertId,
+          uid: backend.auth.currentUser.uid,
           seat: seats[i],
           name,
           username,
@@ -332,6 +392,10 @@ async function confirmBooking() {
   const username = els.user.value.trim();
   const concertId = els.concert.value;
 
+  if (backend && !backend.auth.currentUser) {
+    setStatus("Please log in with Roblox first.", true);
+    return;
+  }
   if (!name || !username) {
     setStatus("Please enter your name and Roblox username.", true);
     return;

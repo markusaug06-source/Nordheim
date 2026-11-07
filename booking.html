@@ -17,6 +17,10 @@
       <a href="library.html">Library</a>
       <a href="restaurant.html">Restaurant</a>
     </nav>
+    <div class="player-badge" id="playerBadge" hidden>
+      <img id="playerPhoto" alt="Your Roblox profile picture" width="36" height="36">
+      <span id="playerName"></span>
+    </div>
     <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
   </header>
 
@@ -32,6 +36,8 @@
     <section class="section">
       <div class="booking">
         <div class="panel booking-form">
+          <a id="robloxLoginBtn" class="btn btn-primary" href="https://robloxlogin-5diz2ls3iq-ew.a.run.app" hidden>Log in with Roblox</a>
+
           <label for="bkConcert">Concert</label>
           <select id="bkConcert"></select>
 
