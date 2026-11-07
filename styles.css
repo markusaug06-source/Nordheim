@@ -86,7 +86,8 @@ a { color: var(--accent); }
   padding: 120px 24px 100px;
   text-align: center;
   background:
-    radial-gradient(ellipse at top, rgba(212, 175, 106, 0.18), transparent 60%),
+    linear-gradient(rgba(15, 18, 24, 0.55), rgba(15, 18, 24, 0.85)),
+    url("images/hall-exterior.png") center / cover no-repeat,
     var(--bg);
 }
 
